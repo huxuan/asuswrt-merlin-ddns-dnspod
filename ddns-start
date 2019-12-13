@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+DDNS_DOMAIN=YOUR_DDNS_DOMAIN
+DDNS_SUB_DOMAIN=YOUR_DDNS_SUB_DOMAIN
+DNSPOD_LOGIN_TOKEN=YOUR_DNSPOD_LOGIN_TOKEN
+DNSPOD_RECORD_ID=YOUR_DNSPOD_RECORD_ID
+DNSPOD_RECORD_LINE_ID=YOUR_DNSPOD_RECORD_LINE_ID
+
+curl -X POST https://dnsapi.cn/Record.Ddns \
+-d domain=$DDNS_DOMAIN \
+-d sub_domain=$DDNS_SUB_DOMAIN \
+-d login_token=$DNSPOD_LOGIN_TOKEN \
+-d record_id=$DNSPOD_RECORD_ID \
+-d record_line_id=$DNSPOD_RECORD_LINE_ID \
+-d value=$1 | grep "<code>1</code>" &> /dev/null
+
+if [ $? -eq 0 ]; then
+    /sbin/ddns_custom_updated 1
+else
+    /sbin/ddns_custom_updated 0
+fi
